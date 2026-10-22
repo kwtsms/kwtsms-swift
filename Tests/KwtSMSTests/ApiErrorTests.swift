@@ -92,8 +92,9 @@ final class ApiErrorTests: XCTestCase {
         XCTAssertTrue(apiErrors["ERR024"]!.lowercased().contains("ip"))
     }
 
-    func testERR028Mentions15Seconds() {
-        XCTAssertTrue(apiErrors["ERR028"]!.contains("15"))
+    // 2026-10-22 15:37 +03: was testERR028Mentions15Seconds; the window is per account, not a fixed 15 s.
+    func testERR028SaysTooSoon() {
+        XCTAssertTrue(apiErrors["ERR028"]!.contains("too soon"))
     }
 
     // MARK: - KwtSMSError

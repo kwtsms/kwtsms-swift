@@ -329,7 +329,7 @@ func saveToKeychain(key: String, value: String) {
 
 ## Test Mode
 
-Set `testMode: true` to queue messages without delivering them. No credits consumed.
+Set `testMode: true` to queue messages without delivering them. Test messages are queued but not delivered. Their credits are held until you delete them from the Sending Queue in your kwtsms.com account.
 
 ```swift
 let sms = KwtSMS(username: "swift_username", password: "swift_password", testMode: true)

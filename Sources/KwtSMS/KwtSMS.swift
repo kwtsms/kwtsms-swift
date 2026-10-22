@@ -132,7 +132,8 @@ public actor KwtSMS {
     ///   - username: Your kwtSMS API username.
     ///   - password: Your kwtSMS API password.
     ///   - senderId: Sender ID to use. Defaults to "KWT-SMS" (testing only).
-    ///   - testMode: If true, messages are queued but not delivered and no credits consumed.
+    ///   - testMode: If true, messages are queued but not delivered; their credits are held until
+    ///     you delete them from the Sending Queue (2026-10-22 15:37 +03: corrected, test sends are not free).
     ///   - logFile: Path to JSONL log file. Empty string disables logging.
     public init(
         username: String,

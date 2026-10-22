@@ -4,7 +4,8 @@ import XCTest
 /// Integration tests that hit the live kwtSMS API with test mode enabled.
 ///
 /// These tests require SWIFT_USERNAME and SWIFT_PASSWORD environment variables.
-/// All sends use test_mode=true so no credits are consumed and no messages are delivered.
+/// All sends use test_mode=true so no messages are delivered; their credits are held until you
+/// delete them from the Sending Queue. 2026-10-22 15:37 +03: corrected, test sends are not free.
 ///
 /// Run: SWIFT_USERNAME=user SWIFT_PASSWORD=pass swift test --filter IntegrationTests
 final class IntegrationTests: XCTestCase {
