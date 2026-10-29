@@ -62,7 +62,7 @@ User enters phone number
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/boxlinknet/kwtsms-swift.git", from: "0.1.0")
+    .package(url: "https://github.com/kwtsms/kwtsms-swift.git", from: "0.1.0")
 ]
 ```
 

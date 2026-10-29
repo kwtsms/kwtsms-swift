@@ -2,9 +2,9 @@
 
 [![Swift 5.10+](https://img.shields.io/badge/Swift-5.10+-orange.svg?style=flat-square)](https://swift.org)
 [![Platforms](https://img.shields.io/badge/Platforms-iOS%20|%20macOS%20|%20tvOS%20|%20watchOS%20|%20Linux-blue.svg?style=flat-square)](Package.swift)
-[![License](https://img.shields.io/github/license/boxlinknet/kwtsms-swift.svg?style=flat-square)](LICENSE)
-[![CI](https://img.shields.io/github/actions/workflow/status/boxlinknet/kwtsms-swift/test.yml?branch=main&style=flat-square&label=CI)](https://github.com/boxlinknet/kwtsms-swift/actions/workflows/test.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/boxlinknet/kwtsms-swift/codeql.yml?branch=main&style=flat-square&label=CodeQL)](https://github.com/boxlinknet/kwtsms-swift/actions/workflows/codeql.yml)
+[![License](https://img.shields.io/github/license/kwtsms/kwtsms-swift.svg?style=flat-square)](LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/kwtsms/kwtsms-swift/test.yml?branch=main&style=flat-square&label=CI)](https://github.com/kwtsms/kwtsms-swift/actions/workflows/test.yml)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/kwtsms/kwtsms-swift/codeql.yml?branch=main&style=flat-square&label=CodeQL)](https://github.com/kwtsms/kwtsms-swift/actions/workflows/codeql.yml)
 
 Official Swift client library for the [kwtSMS](https://www.kwtsms.com/integrations.html) SMS gateway API.
 
@@ -16,14 +16,14 @@ Zero dependencies. Async/await. Thread-safe. Works on iOS, macOS, tvOS, watchOS,
 
 1. Open your project in Xcode.
 2. File > Add Package Dependencies.
-3. Enter: `https://github.com/boxlinknet/kwtsms-swift.git`
+3. Enter: `https://github.com/kwtsms/kwtsms-swift.git`
 4. Select version `0.2.0` or later.
 
 ### Swift Package Manager (Package.swift)
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/boxlinknet/kwtsms-swift.git", from: "0.2.0")
+    .package(url: "https://github.com/kwtsms/kwtsms-swift.git", from: "0.2.0")
 ]
 ```
 
@@ -379,7 +379,7 @@ Before going live:
 
 Swift packages are published via git tags on GitHub.
 
-1. Push code to `github.com/boxlinknet/kwtsms-swift`.
+1. Push code to `github.com/kwtsms/kwtsms-swift`.
 2. Validate the package:
    ```bash
    swift package describe
@@ -389,7 +389,7 @@ Swift packages are published via git tags on GitHub.
    git tag 0.3.0
    git push origin 0.3.0
    ```
-4. Users add in Xcode: File > Add Package Dependencies > enter `https://github.com/boxlinknet/kwtsms-swift.git`.
+4. Users add in Xcode: File > Add Package Dependencies > enter `https://github.com/kwtsms/kwtsms-swift.git`.
 
 The package is also auto-indexed on [Swift Package Index](https://swiftpackageindex.com) after tagging.
 
