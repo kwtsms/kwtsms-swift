@@ -8,7 +8,7 @@
 
 2. Clone the repo:
    ```bash
-   git clone https://github.com/boxlinknet/kwtsms-swift.git
+   git clone https://github.com/kwtsms/kwtsms-swift.git
    cd kwtsms-swift
    ```
 

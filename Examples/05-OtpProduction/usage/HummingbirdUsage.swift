@@ -3,7 +3,7 @@
  *
  * Add to your Package.swift dependencies:
  *   .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "2.0.0"),
- *   .package(url: "https://github.com/boxlinknet/kwtsms-swift.git", from: "0.1.0")
+ *   .package(url: "https://github.com/kwtsms/kwtsms-swift.git", from: "0.1.0")
  *
  * Routes:
  *   POST /auth/send-otp     body: { "phone": "...", "assertion": "<base64>", "keyId": "..." }

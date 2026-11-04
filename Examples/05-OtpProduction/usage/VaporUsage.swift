@@ -3,7 +3,7 @@
  *
  * Add to your Package.swift dependencies:
  *   .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
- *   .package(url: "https://github.com/boxlinknet/kwtsms-swift.git", from: "0.1.0")
+ *   .package(url: "https://github.com/kwtsms/kwtsms-swift.git", from: "0.1.0")
  *
  * Routes:
  *   POST /auth/attest       body: { "keyId": "...", "attestation": "<base64>", "clientData": "<base64>" }
