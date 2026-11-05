@@ -191,6 +191,7 @@ public func validatePhoneFormat(_ normalized: String) -> (valid: Bool, error: St
 
 // MARK: - Normalization
 
+// 2026-11-05 09:25 +03: DocC sample number replaced by placeholder 965XXXXXXXX (old one is a real person). int-testnumber
 /// Normalize a phone number to kwtSMS-accepted format (digits only, international format).
 ///
 /// Converts Arabic-Indic and Extended Arabic-Indic (Persian) digits to Latin,
@@ -198,7 +199,7 @@ public func validatePhoneFormat(_ normalized: String) -> (valid: Bool, error: St
 /// trunk prefix (e.g. 9660559... becomes 966559...).
 ///
 /// - Parameter phone: Raw phone number string in any format.
-/// - Returns: Normalized digits-only string (e.g. "96598765432").
+/// - Returns: Normalized digits-only string (e.g. "965XXXXXXXX").
 public func normalizePhone(_ phone: String) -> String {
     var result = ""
     result.reserveCapacity(phone.count)

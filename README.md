@@ -47,7 +47,7 @@ let sms = KwtSMS(username: "swift_username", password: "swift_password")
 let sms = KwtSMS.fromEnv()
 
 // Send an SMS
-let result = await sms.send(mobile: "96598765432", message: "Hello from Swift!")
+let result = await sms.send(mobile: "965XXXXXXXX", message: "Hello from Swift!")
 if result.result == "OK" {
     print("Sent! Message ID: \(result.msgId ?? "")")
     print("Balance: \(result.balanceAfter ?? 0)")
@@ -86,16 +86,16 @@ Send an SMS to one or more phone numbers.
 
 ```swift
 // Single number
-let result = await sms.send(mobile: "96598765432", message: "Your OTP is: 123456")
+let result = await sms.send(mobile: "965XXXXXXXX", message: "Your OTP is: 123456")
 
 // Multiple numbers (comma-separated)
-let result = await sms.send(mobile: "96598765432,96512345678", message: "Hello!")
+let result = await sms.send(mobile: "965XXXXXXXX,96512345678", message: "Hello!")
 
 // Array of numbers
-let result = await sms.send(mobiles: ["96598765432", "96512345678"], message: "Hello!")
+let result = await sms.send(mobiles: ["965XXXXXXXX", "96512345678"], message: "Hello!")
 
 // Custom sender ID
-let result = await sms.send(mobile: "96598765432", message: "Hello!", sender: "MY-APP")
+let result = await sms.send(mobile: "965XXXXXXXX", message: "Hello!", sender: "MY-APP")
 
 // Check result
 if result.result == "OK" {
@@ -119,7 +119,7 @@ print("Batches: \(result.batches), Sent: \(result.numbers)")
 Validate phone numbers before sending.
 
 ```swift
-let result = await sms.validate(phones: ["+96598765432", "user@email.com", "123"])
+let result = await sms.validate(phones: ["+965XXXXXXXX", "user@email.com", "123"])
 print("Valid: \(result.ok)")      // API-validated OK numbers
 print("Errors: \(result.er)")     // Format errors
 print("No route: \(result.nr)")   // Country not activated
@@ -181,7 +181,7 @@ These are exported publicly for use outside the client:
 import KwtSMS
 
 // Normalize a phone number (strip +, 00, spaces, dashes, convert Arabic digits, strip trunk prefix)
-let normalized = normalizePhone("+965 9876-5432")  // "96598765432"
+let normalized = normalizePhone("+965 XXXX-XXXX")  // "965XXXXXXXX"
 let saudi = normalizePhone("9660559123456")         // "966559123456" (trunk 0 stripped)
 
 // Validate a phone number (includes country-specific format checks)
@@ -192,7 +192,7 @@ let (valid2, error2, _) = validatePhoneInput("96512345678")
 // (false, "Invalid Kuwait mobile number: after +965 must start with 4, 5, 6, 9", "96512345678")
 
 // Find country code from a normalized number (longest match: 3-digit, 2-digit, 1-digit)
-let cc = findCountryCode("96598765432")  // "965" (Kuwait)
+let cc = findCountryCode("965XXXXXXXX")  // "965" (Kuwait)
 let cc2 = findCountryCode("201012345678")  // "20" (Egypt)
 
 // Validate against country-specific rules (80+ countries)
@@ -214,7 +214,7 @@ let cleaned = cleanMessage("Hello \u{1F600} <b>World</b>")  // "Hello  World"
 Every error response includes a developer-friendly `action` field:
 
 ```swift
-let result = await sms.send(mobile: "96598765432", message: "Hello")
+let result = await sms.send(mobile: "965XXXXXXXX", message: "Hello")
 if result.result == "ERROR" {
     print(result.code!)        // "ERR003"
     print(result.description!) // "Authentication error..."
@@ -236,20 +236,20 @@ The `send()` method automatically:
 1. Normalizes all phone numbers (strips `+`, `00`, spaces, dashes, converts Arabic digits, strips domestic trunk prefix).
 2. Validates each number locally (rejects emails, too-short, too-long, no-digits, wrong country format).
 3. Validates against country-specific rules for 80+ countries (local length, mobile prefix).
-4. Deduplicates normalized numbers (e.g., `+96598765432` and `0096598765432` count as one).
+4. Deduplicates normalized numbers (e.g., `+965XXXXXXXX` and `00965XXXXXXXX` count as one).
 5. Cleans the message text (strips emojis, HTML tags, hidden control characters).
 6. Reports invalid numbers in the `invalid` field without crashing the call.
 
 ```swift
 let result = await sms.send(
-    mobiles: ["96598765432", "user@email.com", "123"],
+    mobiles: ["965XXXXXXXX", "user@email.com", "123"],
     message: "Hello!"
 )
 // result.invalid = [
 //   InvalidEntry(input: "user@email.com", error: "...is an email address..."),
 //   InvalidEntry(input: "123", error: "...is too short (3 digits, minimum is 7)")
 // ]
-// The valid number "96598765432" is still sent to the API.
+// The valid number "965XXXXXXXX" is still sent to the API.
 ```
 
 ## Credential Management
@@ -333,7 +333,7 @@ Set `testMode: true` to queue messages without delivering them. Test messages ar
 
 ```swift
 let sms = KwtSMS(username: "swift_username", password: "swift_password", testMode: true)
-let result = await sms.send(mobile: "96598765432", message: "Test")
+let result = await sms.send(mobile: "965XXXXXXXX", message: "Test")
 // Message appears in kwtsms.com Queue but is not delivered.
 // Delete from Queue to recover any held credits.
 ```
@@ -343,7 +343,7 @@ let result = await sms.send(mobile: "96598765432", message: "Test")
 ### Always save msg-id and balance-after
 
 ```swift
-let result = await sms.send(mobile: "96598765432", message: "OTP: 123456")
+let result = await sms.send(mobile: "965XXXXXXXX", message: "OTP: 123456")
 if result.result == "OK" {
     db.saveMsgId(result.msgId!)              // Needed for status() and deliveryReport()
     db.saveBalance(result.balanceAfter!)     // No need to call balance() separately

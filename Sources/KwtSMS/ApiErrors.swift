@@ -7,7 +7,8 @@ public let apiErrors: [String: String] = [
     "ERR003": "Wrong API username or password. Check KWTSMS_USERNAME and KWTSMS_PASSWORD. These are your API credentials, not your account mobile number.",
     "ERR004": "This account does not have API access. Contact kwtSMS support to enable it.",
     "ERR005": "This account is blocked. Contact kwtSMS support.",
-    "ERR006": "No valid phone numbers. Make sure each number includes the country code (e.g., 96598765432 for Kuwait, not 98765432).",
+    // 2026-11-05 09:25 +03: ERR006/ERR025 example number is now the placeholder 965XXXXXXXX, the old sample belongs to a real person. int-testnumber
+    "ERR006": "No valid phone numbers. Make sure each number includes the country code (e.g., 965XXXXXXXX for Kuwait, not XXXXXXXX).",
     "ERR007": "Too many numbers in a single request (maximum 200). Split into smaller batches.",
     "ERR008": "This sender ID is banned. Use a different sender ID registered on your kwtSMS account.",
     "ERR009": "Message is empty. Provide a non-empty message text.",
@@ -21,7 +22,7 @@ public let apiErrors: [String: String] = [
     "ERR022": "Delivery reports are not ready yet. Try again after 24 hours.",
     "ERR023": "Unknown delivery report error. Contact kwtSMS support.",
     "ERR024": "Your IP address is not in the API whitelist. Add it at kwtsms.com → Account → API → IP Lockdown, or disable IP lockdown.",
-    "ERR025": "Invalid phone number. Make sure the number includes the country code (e.g., 96598765432 for Kuwait, not 98765432).",
+    "ERR025": "Invalid phone number. Make sure the number includes the country code (e.g., 965XXXXXXXX for Kuwait, not XXXXXXXX).",
     "ERR026": "This country is not activated on your account. Contact kwtSMS support to enable the destination country.",
     "ERR027": "HTML tags are not allowed in the message. Remove any HTML content and try again.",
     // 2026-10-22 15:37 +03: ERR028 is opt-in per account with a per-account window, not a fixed 15 s.

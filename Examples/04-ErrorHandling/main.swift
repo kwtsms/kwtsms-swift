@@ -3,7 +3,7 @@ import KwtSMS
 let sms = KwtSMS.fromEnv()
 
 // 1. Handle send errors
-let result = await sms.send(mobile: "96598765432", message: "Test message")
+let result = await sms.send(mobile: "965XXXXXXXX", message: "Test message")
 
 switch result.result {
 case "OK":

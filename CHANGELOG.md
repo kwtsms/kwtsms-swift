@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Docs, examples, DocC comments and the ERR006/ERR025 action text now use the placeholder 965XXXXXXXX. Tests read the test number from the `KWTSMS_TEST_NUMBER` environment variable (digits only, 965 plus 8 digits) and are skipped when it is unset.
+
 ### Docs
 
 - ERR028 action text: "Sent to the same number too soon." ERR028 is opt-in per account (Duplicate SMS protection) with a per-account window (10 seconds by default), not a fixed 15 seconds.

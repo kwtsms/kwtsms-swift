@@ -25,7 +25,7 @@ if coverage.result == "OK" {
 }
 
 // Send an SMS
-let result = await sms.send(mobile: "96598765432", message: "Hello from kwtSMS Swift!")
+let result = await sms.send(mobile: "965XXXXXXXX", message: "Hello from kwtSMS Swift!")
 if result.result == "OK" {
     print("Sent! Message ID: \(result.msgId ?? "")")
     print("Balance remaining: \(result.balanceAfter ?? 0)")

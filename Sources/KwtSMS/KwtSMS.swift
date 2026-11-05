@@ -100,6 +100,7 @@ public struct DeliveryReportResult: Sendable {
 
 // MARK: - KwtSMS Client
 
+// 2026-11-05 09:25 +03: DocC sample number replaced by placeholder 965XXXXXXXX (old one is a real person). int-testnumber
 /// kwtSMS API client for sending SMS messages from Swift.
 ///
 /// Thread-safe: uses `actor` isolation for internal mutable state.
@@ -108,7 +109,7 @@ public struct DeliveryReportResult: Sendable {
 /// Usage:
 /// ```swift
 /// let sms = KwtSMS(username: "swift_username", password: "swift_password")
-/// let result = try await sms.send(mobile: "96598765432", message: "Hello!")
+/// let result = try await sms.send(mobile: "965XXXXXXXX", message: "Hello!")
 /// ```
 public actor KwtSMS {
     private let username: String

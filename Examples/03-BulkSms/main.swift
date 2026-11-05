@@ -2,8 +2,12 @@ import KwtSMS
 
 let sms = KwtSMS.fromEnv()
 
-// Generate a list of numbers (in practice, load from your database)
-let numbers = (0..<500).map { "9655000\(String(format: "%04d", $0))" }
+// Load your recipient list (in practice, from your database).
+// 965XXXXXXXX is a placeholder: replace it with your recipients' numbers.
+let numbers: [String] = [
+    "965XXXXXXXX",
+    // add more numbers here
+]
 
 // sendBulk() auto-batches >200 numbers
 let result = await sms.sendBulk(mobiles: numbers, message: "Campaign announcement from MyApp")

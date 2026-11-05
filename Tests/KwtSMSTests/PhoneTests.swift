@@ -1,56 +1,59 @@
 import XCTest
 @testable import KwtSMS
 
+// 2026-11-05 09:24 +03: Kuwait number literals replaced by TestNumber (KWTSMS_TEST_NUMBER,
+// skipped when unset); asserts use TestNumber.assertSame so values are never printed.
+// Why: the old sample number belongs to a real person. Task: int-testnumber.
 final class PhoneTests: XCTestCase {
 
     // MARK: - normalizePhone()
 
-    func testStripsPlus() {
-        XCTAssertEqual(normalizePhone("+96598765432"), "96598765432")
+    func testStripsPlus() throws {
+        TestNumber.assertSame(normalizePhone(try TestNumber.variant(.plus)), try TestNumber.get())
     }
 
-    func testStripsDoubleZero() {
-        XCTAssertEqual(normalizePhone("0096598765432"), "96598765432")
+    func testStripsDoubleZero() throws {
+        TestNumber.assertSame(normalizePhone(try TestNumber.variant(.doubleZero)), try TestNumber.get())
     }
 
-    func testStripsSpaces() {
-        XCTAssertEqual(normalizePhone("965 9876 5432"), "96598765432")
+    func testStripsSpaces() throws {
+        TestNumber.assertSame(normalizePhone(try TestNumber.variant(.spaces)), try TestNumber.get())
     }
 
-    func testStripsDashes() {
-        XCTAssertEqual(normalizePhone("965-9876-5432"), "96598765432")
+    func testStripsDashes() throws {
+        TestNumber.assertSame(normalizePhone(try TestNumber.variant(.dashes)), try TestNumber.get())
     }
 
-    func testStripsDots() {
-        XCTAssertEqual(normalizePhone("965.9876.5432"), "96598765432")
+    func testStripsDots() throws {
+        TestNumber.assertSame(normalizePhone(try TestNumber.variant(.dots)), try TestNumber.get())
     }
 
-    func testStripsParentheses() {
-        XCTAssertEqual(normalizePhone("(965) 98765432"), "96598765432")
+    func testStripsParentheses() throws {
+        TestNumber.assertSame(normalizePhone(try TestNumber.variant(.parens)), try TestNumber.get())
     }
 
-    func testStripsSlashes() {
-        XCTAssertEqual(normalizePhone("965/9876/5432"), "96598765432")
+    func testStripsSlashes() throws {
+        TestNumber.assertSame(normalizePhone(try TestNumber.variant(.slashes)), try TestNumber.get())
     }
 
-    func testStripsMixedSeparators() {
-        XCTAssertEqual(normalizePhone("+00965 (9876)-5432"), "96598765432")
+    func testStripsMixedSeparators() throws {
+        TestNumber.assertSame(normalizePhone(try TestNumber.variant(.mixed)), try TestNumber.get())
     }
 
-    func testArabicIndicDigits() {
-        XCTAssertEqual(normalizePhone("\u{0669}\u{0666}\u{0665}\u{0669}\u{0668}\u{0667}\u{0666}\u{0665}\u{0664}\u{0663}\u{0662}"), "96598765432")
+    func testArabicIndicDigits() throws {
+        TestNumber.assertSame(normalizePhone(try TestNumber.variant(.arabic)), try TestNumber.get())
     }
 
-    func testExtendedArabicIndicDigits() {
-        XCTAssertEqual(normalizePhone("\u{06F9}\u{06F6}\u{06F5}\u{06F9}\u{06F8}\u{06F7}\u{06F6}\u{06F5}\u{06F4}\u{06F3}\u{06F2}"), "96598765432")
+    func testExtendedArabicIndicDigits() throws {
+        TestNumber.assertSame(normalizePhone(try TestNumber.variant(.persian)), try TestNumber.get())
     }
 
-    func testStripsLeadingZeros() {
-        XCTAssertEqual(normalizePhone("0096598765432"), "96598765432")
+    func testStripsLeadingZeros() throws {
+        TestNumber.assertSame(normalizePhone("000" + (try TestNumber.get())), try TestNumber.get())
     }
 
-    func testStripsSingleLeadingZero() {
-        XCTAssertEqual(normalizePhone("098765432"), "98765432")
+    func testStripsSingleLeadingZero() throws {
+        TestNumber.assertSame(normalizePhone("0" + (try TestNumber.local())), try TestNumber.local())
     }
 
     func testEmptyString() {
@@ -65,8 +68,8 @@ final class PhoneTests: XCTestCase {
         XCTAssertEqual(normalizePhone("abcdef"), "")
     }
 
-    func testAlreadyClean() {
-        XCTAssertEqual(normalizePhone("96598765432"), "96598765432")
+    func testAlreadyClean() throws {
+        TestNumber.assertSame(normalizePhone(try TestNumber.get()), try TestNumber.get())
     }
 
     // MARK: - Domestic trunk prefix stripping
@@ -94,15 +97,17 @@ final class PhoneTests: XCTestCase {
         XCTAssertEqual(normalizePhone("2001012345678"), "201012345678")
     }
 
-    func testKuwaitNoTrunkPrefix() {
+    func testKuwaitNoTrunkPrefix() throws {
         // Kuwait numbers don't use trunk prefix, should not be modified
-        XCTAssertEqual(normalizePhone("96598765432"), "96598765432")
+        TestNumber.assertSame(normalizePhone(try TestNumber.get()), try TestNumber.get())
     }
 
     // MARK: - findCountryCode()
 
-    func testFindCountryCode3Digit() {
-        XCTAssertEqual(findCountryCode("96598765432"), "965")
+    func testFindCountryCode3Digit() throws {
+        // get() outside the assert: an XCTSkip thrown inside its autoclosure would count as an error.
+        let n = try TestNumber.get()
+        XCTAssertEqual(findCountryCode(n), "965")
     }
 
     func testFindCountryCode2Digit() {
@@ -117,20 +122,21 @@ final class PhoneTests: XCTestCase {
         XCTAssertNil(findCountryCode("99912345678"))
     }
 
-    func testFindCountryCodeLongestMatch() {
+    func testFindCountryCodeLongestMatch() throws {
         // 965 is 3-digit and should match before any 2 or 1-digit code
-        XCTAssertEqual(findCountryCode("96598765432"), "965")
+        let n = try TestNumber.get()
+        XCTAssertEqual(findCountryCode(n), "965")
     }
 
     // MARK: - validatePhoneFormat()
 
-    func testValidKuwaitFormat() {
-        let result = validatePhoneFormat("96598765432")
+    func testValidKuwaitFormat() throws {
+        let result = validatePhoneFormat(try TestNumber.get())
         XCTAssertTrue(result.valid)
     }
 
-    func testInvalidKuwaitLengthTooShort() {
-        let result = validatePhoneFormat("9659876543")  // 7 local digits, needs 8
+    func testInvalidKuwaitLengthTooShort() throws {
+        let result = validatePhoneFormat(String(try TestNumber.get().dropLast()))  // 7 local digits, needs 8
         XCTAssertFalse(result.valid)
         XCTAssertTrue(result.error!.contains("Kuwait"))
         XCTAssertTrue(result.error!.contains("8 digits"))
@@ -181,36 +187,37 @@ final class PhoneTests: XCTestCase {
         XCTAssertTrue(result.valid)
     }
 
-    func testKuwaitAllValidPrefixes() {
-        // 4x, 5x, 6x, 9x are all valid Kuwait mobile prefixes
+    func testKuwaitAllValidPrefixes() throws {
+        // 4x, 5x, 6x, 9x are all valid Kuwait mobile prefixes.
+        // Built in memory from the test number's last 7 digits; validated locally only, never sent.
+        let tail = String(try TestNumber.get().suffix(7))
         for prefix in ["4", "5", "6", "9"] {
-            let number = "965\(prefix)1234567"
-            let result = validatePhoneFormat(number)
+            let result = validatePhoneFormat("965" + prefix + tail)
             XCTAssertTrue(result.valid, "Kuwait prefix \(prefix) should be valid")
         }
     }
 
     // MARK: - validatePhoneInput() (integrated with format validation)
 
-    func testValidKuwaitNumber() {
-        let (valid, error, normalized) = validatePhoneInput("96598765432")
+    func testValidKuwaitNumber() throws {
+        let (valid, error, normalized) = validatePhoneInput(try TestNumber.get())
         XCTAssertTrue(valid)
         XCTAssertNil(error)
-        XCTAssertEqual(normalized, "96598765432")
+        TestNumber.assertSame(normalized, try TestNumber.get())
     }
 
-    func testValidWithPlusPrefix() {
-        let (valid, error, normalized) = validatePhoneInput("+96598765432")
+    func testValidWithPlusPrefix() throws {
+        let (valid, error, normalized) = validatePhoneInput(try TestNumber.variant(.plus))
         XCTAssertTrue(valid)
         XCTAssertNil(error)
-        XCTAssertEqual(normalized, "96598765432")
+        TestNumber.assertSame(normalized, try TestNumber.get())
     }
 
-    func testValidWith00Prefix() {
-        let (valid, error, normalized) = validatePhoneInput("0096598765432")
+    func testValidWith00Prefix() throws {
+        let (valid, error, normalized) = validatePhoneInput(try TestNumber.variant(.doubleZero))
         XCTAssertTrue(valid)
         XCTAssertNil(error)
-        XCTAssertEqual(normalized, "96598765432")
+        TestNumber.assertSame(normalized, try TestNumber.get())
     }
 
     func testValidGenericNumber() {
@@ -264,17 +271,17 @@ final class PhoneTests: XCTestCase {
         XCTAssertTrue(error!.contains("16 digits"))
     }
 
-    func testArabicDigitsValidation() {
-        let (valid, error, normalized) = validatePhoneInput("\u{0669}\u{0666}\u{0665}\u{0669}\u{0668}\u{0667}\u{0666}\u{0665}\u{0664}\u{0663}\u{0662}")
+    func testArabicDigitsValidation() throws {
+        let (valid, error, normalized) = validatePhoneInput(try TestNumber.variant(.arabic))
         XCTAssertTrue(valid)
         XCTAssertNil(error)
-        XCTAssertEqual(normalized, "96598765432")
+        TestNumber.assertSame(normalized, try TestNumber.get())
     }
 
-    func testLeadingAndTrailingWhitespace() {
-        let (valid, _, normalized) = validatePhoneInput("  96598765432  ")
+    func testLeadingAndTrailingWhitespace() throws {
+        let (valid, _, normalized) = validatePhoneInput(try TestNumber.variant(.padded))
         XCTAssertTrue(valid)
-        XCTAssertEqual(normalized, "96598765432")
+        TestNumber.assertSame(normalized, try TestNumber.get())
     }
 
     func testSaudiWithTrunkPrefix() {

@@ -7,7 +7,10 @@ import XCTest
 /// All sends use test_mode=true so no messages are delivered; their credits are held until you
 /// delete them from the Sending Queue. 2026-10-22 15:37 +03: corrected, test sends are not free.
 ///
-/// Run: SWIFT_USERNAME=user SWIFT_PASSWORD=pass swift test --filter IntegrationTests
+/// Run: SWIFT_USERNAME=user SWIFT_PASSWORD=pass KWTSMS_TEST_NUMBER=965XXXXXXXX swift test --filter IntegrationTests
+///
+/// 2026-11-05 09:24 +03: sends go only to KWTSMS_TEST_NUMBER via TestNumber (tests that need it
+/// skip when unset); the hardcoded sample number belonged to a real person. Task: int-testnumber.
 final class IntegrationTests: XCTestCase {
 
     private var sms: KwtSMS!
@@ -68,7 +71,7 @@ final class IntegrationTests: XCTestCase {
 
     func testSendToValidKuwaitNumber() async throws {
         try skipIfNoCredentials()
-        let result = await sms.send(mobile: "96598765432", message: "Test from Swift client")
+        let result = await sms.send(mobile: try TestNumber.get(), message: "Test from Swift client")
         // With test mode, the API should accept it (result OK) or return a known error
         // The number may not be real, so ERR006 is also acceptable
         XCTAssertTrue(["OK", "ERROR"].contains(result.result))
@@ -79,21 +82,21 @@ final class IntegrationTests: XCTestCase {
 
     func testSendWithPlusPrefix() async throws {
         try skipIfNoCredentials()
-        let result = await sms.send(mobile: "+96598765432", message: "Test normalization")
+        let result = await sms.send(mobile: try TestNumber.variant(.plus), message: "Test normalization")
         // Should normalize and send, not crash
         XCTAssertTrue(["OK", "ERROR"].contains(result.result))
     }
 
     func testSendWith00Prefix() async throws {
         try skipIfNoCredentials()
-        let result = await sms.send(mobile: "0096598765432", message: "Test normalization")
+        let result = await sms.send(mobile: try TestNumber.variant(.doubleZero), message: "Test normalization")
         XCTAssertTrue(["OK", "ERROR"].contains(result.result))
     }
 
     func testSendWithArabicDigits() async throws {
         try skipIfNoCredentials()
         let result = await sms.send(
-            mobile: "\u{0669}\u{0666}\u{0665}\u{0669}\u{0668}\u{0667}\u{0666}\u{0665}\u{0664}\u{0663}\u{0662}",
+            mobile: try TestNumber.variant(.arabic),
             message: "Test Arabic digit normalization"
         )
         XCTAssertTrue(["OK", "ERROR"].contains(result.result))
@@ -124,7 +127,7 @@ final class IntegrationTests: XCTestCase {
     func testSendMixedValidInvalid() async throws {
         try skipIfNoCredentials()
         let result = await sms.send(
-            mobiles: ["96598765432", "user@email.com", "123"],
+            mobiles: [try TestNumber.get(), "user@email.com", "123"],
             message: "Test mixed input"
         )
         // Valid number should still be sent, invalid ones collected
@@ -134,14 +137,14 @@ final class IntegrationTests: XCTestCase {
 
     func testSendEmptyMessage() async throws {
         try skipIfNoCredentials()
-        let result = await sms.send(mobile: "96598765432", message: "")
+        let result = await sms.send(mobile: try TestNumber.get(), message: "")
         XCTAssertEqual(result.result, "ERROR")
         XCTAssertEqual(result.code, "ERR009")
     }
 
     func testSendEmojiOnlyMessage() async throws {
         try skipIfNoCredentials()
-        let result = await sms.send(mobile: "96598765432", message: "\u{1F600}\u{1F601}")
+        let result = await sms.send(mobile: try TestNumber.get(), message: "\u{1F600}\u{1F601}")
         XCTAssertEqual(result.result, "ERROR")
         XCTAssertEqual(result.code, "ERR009")
     }
@@ -149,7 +152,7 @@ final class IntegrationTests: XCTestCase {
     func testSendDeduplicatesNumbers() async throws {
         try skipIfNoCredentials()
         let result = await sms.send(
-            mobiles: ["+96598765432", "0096598765432", "96598765432"],
+            mobiles: [try TestNumber.variant(.plus), try TestNumber.variant(.doubleZero), try TestNumber.get()],
             message: "Dedup test"
         )
         // All three normalize to the same number, should only send once
@@ -158,8 +161,8 @@ final class IntegrationTests: XCTestCase {
 
     func testSendSingleLeadingZero() async throws {
         try skipIfNoCredentials()
-        // 098765432 → 98765432 after normalization (single leading zero stripped)
-        let result = await sms.send(mobile: "098765432", message: "Single leading zero test")
+        // "0" + local part becomes the 8-digit local part after normalization (single leading zero stripped)
+        let result = await sms.send(mobile: "0" + (try TestNumber.local()), message: "Single leading zero test")
         XCTAssertTrue(["OK", "ERROR"].contains(result.result))
         // Number is valid (8 digits, passes length check) but may get ERR006/ERR025 from API
     }
@@ -199,14 +202,14 @@ final class IntegrationTests: XCTestCase {
 
     func testValidateWithValidNumber() async throws {
         try skipIfNoCredentials()
-        let result = await sms.validate(phones: ["96598765432"])
+        let result = await sms.validate(phones: [try TestNumber.get()])
         // The number may end up in OK, ER, or NR depending on account configuration
         XCTAssertNil(result.error)
     }
 
     func testValidateWithInvalidInput() async throws {
         try skipIfNoCredentials()
-        let result = await sms.validate(phones: ["user@email.com", "96598765432"])
+        let result = await sms.validate(phones: ["user@email.com", try TestNumber.get()])
         XCTAssertEqual(result.rejected.count, 1)
         XCTAssertTrue(result.rejected[0].error.contains("email"))
     }
@@ -242,7 +245,7 @@ final class IntegrationTests: XCTestCase {
             testMode: true,
             logFile: ""
         )
-        let result = await badSender.send(mobile: "96598765432", message: "Wrong sender test")
+        let result = await badSender.send(mobile: try TestNumber.get(), message: "Wrong sender test")
         // Expect ERROR with ERR008 or similar
         if result.result == "ERROR" {
             XCTAssertNotNil(result.action ?? result.description)

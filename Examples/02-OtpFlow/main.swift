@@ -48,4 +48,4 @@ let sms = KwtSMS(
     testMode: true
 )
 
-await sendOTP(phone: "+96598765432", sms: sms)
+await sendOTP(phone: "+965XXXXXXXX", sms: sms)

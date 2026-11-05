@@ -47,7 +47,7 @@ public let MAX_VERIFY_PER_PHONE = 5                                // per hour (
 
 /// Stored per OTP request. Code is always a SHA-256 hash with salt, never plain text.
 public struct OtpRecord: Sendable {
-    public let phone: String              // normalized (digits only, e.g. "96598765432")
+    public let phone: String              // normalized (digits only, e.g. "965XXXXXXXX")
     public let codeHash: String           // SHA-256(salt + code), hex encoded
     public let salt: String               // random salt for this code
     public let expiresAt: Date

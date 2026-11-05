@@ -21,4 +21,7 @@ jobs:
       - name: Build
         run: swift build -v
       - name: Run unit tests
+        # 2026-11-05 09:26 +03: phone tests read the test number from this secret and skip when unset. int-testnumber
+        env:
+          KWTSMS_TEST_NUMBER: ${{ secrets.KWTSMS_TEST_NUMBER }}
         run: swift test --filter "PhoneTests|MessageTests|ApiErrorTests" -v

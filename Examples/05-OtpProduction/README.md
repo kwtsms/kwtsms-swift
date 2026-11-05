@@ -396,7 +396,7 @@ KWTSMS_LOG_FILE=
 ### Using raw phone as session/store key
 
 ```swift
-// Wrong -- "+96598765432" and "96598765432" are treated as different users
+// Wrong -- "+965XXXXXXXX" and "965XXXXXXXX" are treated as different users
 store.set(phone: rawInput, record: record)
 
 // Correct -- normalizePhone() is called internally, but use it in YOUR code too
