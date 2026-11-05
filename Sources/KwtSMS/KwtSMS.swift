@@ -118,6 +118,14 @@ public actor KwtSMS {
     private let testMode: Bool
     private let logFile: String
 
+    /// Library version, sent in the User-Agent. The release workflow fails when it differs from the tag.
+    // 2026-11-05 14:22 +03: added so kwtSMS can count accounts per integration (#939).
+    public static let version = "0.3.0"
+
+    /// The User-Agent this client sends: "[app token ]kwtsms-swift/<version>".
+    // 2026-11-05 14:22 +03: added for per-integration counts (#939).
+    public nonisolated let userAgent: String
+
     private var _cachedBalance: Double?
     private var _cachedPurchased: Double?
 
@@ -136,18 +144,46 @@ public actor KwtSMS {
     ///   - testMode: If true, messages are queued but not delivered; their credits are held until
     ///     you delete them from the Sending Queue (2026-10-22 15:37 +03: corrected, test sends are not free).
     ///   - logFile: Path to JSONL log file. Empty string disables logging.
+    ///   - appName: Product token of the calling app or plugin, e.g. "kwtsms-wordpress/3.5.2", sent before
+    ///     the library token in the User-Agent (2026-11-05 14:22 +03: added, #939).
     public init(
         username: String,
         password: String,
         senderId: String = "KWT-SMS",
         testMode: Bool = false,
-        logFile: String = "kwtsms.log"
+        logFile: String = "kwtsms.log",
+        appName: String = ""
     ) {
+        self.userAgent = KwtSMS.buildUserAgent(appName: appName)
         self.username = username
         self.password = password
         self.senderId = senderId
         self.testMode = testMode
         self.logFile = logFile
+    }
+
+    /// Build the User-Agent from an optional app token. The token is caller input, so control characters
+    /// (CR/LF would split the header) and non-ASCII characters are removed, whitespace runs become '-',
+    /// leading and trailing '-' are trimmed, and it is cut to 64 bytes. Empty gives the library token only.
+    // 2026-11-05 14:22 +03: added for per-integration counts (#939).
+    public static func buildUserAgent(appName: String = "") -> String {
+        var kept = ""
+        for scalar in appName.unicodeScalars {
+            let v = scalar.value
+            if v >= 0x20 && v < 0x7f {
+                kept.unicodeScalars.append(scalar)
+            } else if v > 0x9f && scalar.properties.isWhitespace {
+                kept.unicodeScalars.append(" ")
+            }
+        }
+        let words = kept.split(whereSeparator: { $0 == " " }).joined(separator: "-")
+        var app = Substring(words).drop(while: { $0 == "-" })
+        while app.last == "-" { app = app.dropLast() }
+        // Only ASCII is left, so 64 characters are 64 bytes.
+        var cut = String(app.prefix(64))
+        while cut.hasSuffix("-") { cut.removeLast() }
+        let lib = "kwtsms-swift/\(version)"
+        return cut.isEmpty ? lib : "\(cut) \(lib)"
     }
 
     /// Create a kwtSMS client from environment variables and/or a `.env` file.
@@ -200,7 +236,8 @@ public actor KwtSMS {
             let response = try await apiRequest(
                 endpoint: "balance",
                 payload: authPayload,
-                logFile: logFile
+                logFile: logFile,
+                userAgent: userAgent
             )
 
             let result = response["result"] as? String ?? ""
@@ -309,7 +346,7 @@ public actor KwtSMS {
             var payload = authPayload
             payload["mobile"] = validNumbers.joined(separator: ",")
 
-            let response = try await apiRequest(endpoint: "validate", payload: payload, logFile: logFile)
+            let response = try await apiRequest(endpoint: "validate", payload: payload, logFile: logFile, userAgent: userAgent)
             let result = response["result"] as? String ?? ""
 
             if result == "OK", let mobile = response["mobile"] as? [String: Any] {
@@ -334,7 +371,7 @@ public actor KwtSMS {
     /// - Returns: A `SenderIdResult` with the list of sender IDs or an error.
     public func senderIds() async -> SenderIdResult {
         do {
-            let response = try await apiRequest(endpoint: "senderid", payload: authPayload, logFile: logFile)
+            let response = try await apiRequest(endpoint: "senderid", payload: authPayload, logFile: logFile, userAgent: userAgent)
             let result = response["result"] as? String ?? ""
 
             if result == "OK" {
@@ -362,7 +399,7 @@ public actor KwtSMS {
     /// - Returns: A `CoverageResult` with active prefixes or an error.
     public func coverage() async -> CoverageResult {
         do {
-            let response = try await apiRequest(endpoint: "coverage", payload: authPayload, logFile: logFile)
+            let response = try await apiRequest(endpoint: "coverage", payload: authPayload, logFile: logFile, userAgent: userAgent)
             let result = response["result"] as? String ?? ""
 
             if result == "OK" {
@@ -394,7 +431,7 @@ public actor KwtSMS {
             var payload = authPayload
             payload["msgid"] = msgId
 
-            let response = try await apiRequest(endpoint: "status", payload: payload, logFile: logFile)
+            let response = try await apiRequest(endpoint: "status", payload: payload, logFile: logFile, userAgent: userAgent)
             let result = response["result"] as? String ?? ""
 
             if result == "OK" {
@@ -436,7 +473,7 @@ public actor KwtSMS {
             var payload = authPayload
             payload["msgid"] = msgId
 
-            let response = try await apiRequest(endpoint: "dlr", payload: payload, logFile: logFile)
+            let response = try await apiRequest(endpoint: "dlr", payload: payload, logFile: logFile, userAgent: userAgent)
             let result = response["result"] as? String ?? ""
 
             if result == "OK" {
@@ -532,7 +569,7 @@ public actor KwtSMS {
         payload["test"] = testMode ? "1" : "0"
 
         do {
-            let response = try await apiRequest(endpoint: "send", payload: payload, logFile: logFile)
+            let response = try await apiRequest(endpoint: "send", payload: payload, logFile: logFile, userAgent: userAgent)
             let result = response["result"] as? String ?? ""
 
             if result == "OK" {

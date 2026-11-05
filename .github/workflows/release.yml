@@ -15,6 +15,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # 2026-11-05 14:22 +03: KwtSMS.version is sent in the User-Agent, so it must equal the tag (no v prefix) (#939).
+      - name: Check KwtSMS.version matches the tag
+        run: |
+          v=$(grep -oE 'static let version = "[^"]+"' Sources/KwtSMS/KwtSMS.swift | cut -d'"' -f2)
+          [ "$v" = "${GITHUB_REF_NAME}" ] || { echo "::error::KwtSMS.version ($v) does not match tag ${GITHUB_REF_NAME}"; exit 1; }
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:

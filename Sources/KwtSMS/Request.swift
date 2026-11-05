@@ -18,23 +18,21 @@ private let requestTimeout: TimeInterval = 15
 ///   - endpoint: The API endpoint name (e.g. "send", "balance").
 ///   - payload: The request body as a dictionary.
 ///   - logFile: Path to the JSONL log file. Empty string disables logging.
+///   - userAgent: User-Agent header (2026-11-05 14:22 +03: added, #939).
 /// - Returns: Parsed JSON response as a dictionary.
 /// - Throws: `KwtSMSError.networkError` or `KwtSMSError.invalidResponse`.
 func apiRequest(
     endpoint: String,
     payload: [String: Any],
-    logFile: String = ""
+    logFile: String = "",
+    userAgent: String = KwtSMS.buildUserAgent()
 ) async throws -> [String: Any] {
     let urlString = baseURL + endpoint + "/"
     guard let url = URL(string: urlString) else {
         throw KwtSMSError.networkError("Invalid URL: \(urlString)")
     }
 
-    var request = URLRequest(url: url)
-    request.httpMethod = "POST"
-    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    request.setValue("application/json", forHTTPHeaderField: "Accept")
-    request.timeoutInterval = requestTimeout
+    var request = makeAPIRequest(url: url, userAgent: userAgent)
 
     let jsonData: Data
     do {
@@ -67,6 +65,19 @@ func apiRequest(
     writeLog(logFile: logFile, endpoint: endpoint, request: payload, responseBody: responseBody, ok: isOK, errorMessage: nil)
 
     return json
+}
+
+/// Build the POST request with the JSON and User-Agent headers.
+/// 2026-11-05 14:22 +03: split out so a unit test can check the User-Agent header; it is set on the URLRequest
+/// because Linux URLSession may ignore a User-Agent on the session configuration (#939).
+func makeAPIRequest(url: URL, userAgent: String) -> URLRequest {
+    var request = URLRequest(url: url)
+    request.httpMethod = "POST"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.setValue("application/json", forHTTPHeaderField: "Accept")
+    request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+    request.timeoutInterval = requestTimeout
+    return request
 }
 
 /// Cross-platform async URLSession wrapper.

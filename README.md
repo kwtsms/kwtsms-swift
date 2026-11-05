@@ -209,6 +209,17 @@ if let rule = phoneRules["965"] {
 let cleaned = cleanMessage("Hello \u{1F600} <b>World</b>")  // "Hello  World"
 ```
 
+## User-Agent
+
+Every API request carries the User-Agent `kwtsms-swift/<version>`: the library name and version only, no
+personal or customer data. Pass your own product token as `appName` to put it in front:
+
+```swift
+let sms = KwtSMS(username: "swift_username", password: "swift_password", senderId: "MY-SENDER",
+                 appName: "my-shop/2.1.0")
+// User-Agent: my-shop/2.1.0 kwtsms-swift/0.3.0
+```
+
 ## Error Handling
 
 Every error response includes a developer-friendly `action` field:
