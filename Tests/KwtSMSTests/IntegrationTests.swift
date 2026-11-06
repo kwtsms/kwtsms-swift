@@ -50,13 +50,9 @@ final class IntegrationTests: XCTestCase {
         XCTAssertTrue(result.balance! >= 0)
     }
 
-    func testVerifyWithWrongCredentials() async throws {
-        try skipIfNoCredentials()
-        let badSms = KwtSMS(username: "wrong_user", password: "wrong_pass", testMode: true, logFile: "")
-        let result = await badSms.verify()
-        XCTAssertFalse(result.ok)
-        XCTAssertNotNil(result.error)
-    }
+    // 2026-11-07 00:03 +03: wrong-credential test mocked; live failed logins trip the security log (task neg-auth-tests).
+    // testVerifyWithWrongCredentials removed: ERR003 handling is covered offline in ApiErrorTests.swift
+    // (testEnrichesKnownErrorCode, testERR003MentionsCredentials).
 
     // MARK: - balance()
 
