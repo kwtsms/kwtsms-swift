@@ -1,5 +1,5 @@
 /**
- * OTP endpoints — Vapor (Swift server framework)
+ * OTP endpoints - Vapor (Swift server framework)
  *
  * Add to your Package.swift dependencies:
  *   .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
@@ -70,7 +70,7 @@ func registerOtpRoutes(_ app: Application) {
 
     let auth = app.grouped("auth")
 
-    // POST /auth/attest — one-time device registration
+    // POST /auth/attest - one-time device registration
     // Call this after DCAppAttestService.attestKey() on the client
     // auth.post("attest") { req async throws -> Response in
     //     let body = try req.content.decode(AttestDeviceRequest.self)

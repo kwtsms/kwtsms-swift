@@ -23,7 +23,7 @@ Zero dependencies. Async/await. Thread-safe. Works on iOS, macOS, tvOS, watchOS,
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/kwtsms/kwtsms-swift.git", from: "0.2.0")
+    .package(url: "https://github.com/kwtsms/kwtsms-swift.git", from: "0.4.0")
 ]
 ```
 

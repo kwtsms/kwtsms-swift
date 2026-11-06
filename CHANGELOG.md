@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-06
+
 ### Added
 
-- The client sends a User-Agent `kwtsms-swift/<version>` (name and version only, no personal data) so kwtSMS can see which integrations are in use. An optional `appName` init argument puts your app's token in front, e.g. `my-shop/2.1.0 kwtsms-swift/0.3.0`. New `KwtSMS.version`, `userAgent` and `KwtSMS.buildUserAgent(appName:)`.
+- The client sends a User-Agent `kwtsms-swift/<version>` (name and version only, no personal data) so kwtSMS can see which integrations are in use. An optional `appName` init argument puts your app's token in front, e.g. `my-shop/2.1.0 kwtsms-swift/0.4.0`. New `KwtSMS.version`, `userAgent` and `KwtSMS.buildUserAgent(appName:)`.
 
 ### Changed
 

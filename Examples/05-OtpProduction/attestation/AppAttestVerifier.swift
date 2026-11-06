@@ -2,7 +2,7 @@
  * Apple App Attest server-side verifier.
  *
  * Proves that each API request comes from a genuine installation of YOUR app
- * on a real Apple device — not a script, emulator, or modified binary.
+ * on a real Apple device - not a script, emulator, or modified binary.
  *
  * This is the iOS equivalent of CAPTCHA for web apps. It blocks:
  *   - Bots and scripts that call your API directly
@@ -173,7 +173,7 @@ public actor AppAttestVerifier: DeviceAttestVerifier {
     public func verify(assertion: Data, keyId: String, clientData: Data) async -> Bool {
         // 1. Look up the stored public key for this device
         guard let publicKey = deviceKeys[keyId] else {
-            // Device not registered — client needs to call registerDevice first
+            // Device not registered - client needs to call registerDevice first
             return false
         }
 

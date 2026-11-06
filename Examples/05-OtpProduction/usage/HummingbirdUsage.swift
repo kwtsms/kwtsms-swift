@@ -1,5 +1,5 @@
 /**
- * OTP endpoints — Hummingbird (lightweight Swift server framework)
+ * OTP endpoints - Hummingbird (lightweight Swift server framework)
  *
  * Add to your Package.swift dependencies:
  *   .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "2.0.0"),

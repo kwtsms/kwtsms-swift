@@ -120,7 +120,7 @@ public actor KwtSMS {
 
     /// Library version, sent in the User-Agent. The release workflow fails when it differs from the tag.
     // 2026-11-05 14:22 +03: added so kwtSMS can count accounts per integration (#939).
-    public static let version = "0.3.0"
+    public static let version = "0.4.0"
 
     /// The User-Agent this client sends: "[app token ]kwtsms-swift/<version>".
     // 2026-11-05 14:22 +03: added for per-integration counts (#939).

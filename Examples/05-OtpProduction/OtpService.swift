@@ -282,8 +282,8 @@ public actor OtpService {
     ///
     /// Full flow:
     ///   1. Sanitize + validate phone (no SMS credit wasted on bad numbers)
-    ///   2. Validate auth token (if TokenAuthenticator configured — for 2FA flows)
-    ///   3. Verify device attestation (if DeviceAttestVerifier configured — blocks scripts/bots)
+    ///   2. Validate auth token (if TokenAuthenticator configured - for 2FA flows)
+    ///   3. Verify device attestation (if DeviceAttestVerifier configured - blocks scripts/bots)
     ///   4. Rate limit by IP (10 sends/hour)
     ///   5. Rate limit by phone (3 sends/hour)
     ///   6. Enforce 4-minute resend cooldown

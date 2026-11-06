@@ -174,7 +174,9 @@ final class IntegrationTests: XCTestCase {
         // Expect ERROR with ERR026 (country not activated) or similar
         XCTAssertEqual(result.result, "ERROR")
         if let code = result.code {
-            XCTAssertTrue(["ERR006", "ERR025", "ERR026"].contains(code),
+            // 2026-11-06 12:16 +03: ERR_INVALID_INPUT added: this sample has 8 digits after +252 (Somali mobiles have 9),
+            // so the client now rejects it locally before any API call. Found in the 0.4.0 release check.
+            XCTAssertTrue(["ERR006", "ERR025", "ERR026", "ERR_INVALID_INPUT"].contains(code),
                 "Expected country/number error, got \(code): \(result.description ?? "")")
         }
         XCTAssertNotNil(result.action ?? result.description, "Should have error guidance")
