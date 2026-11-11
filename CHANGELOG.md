@@ -11,57 +11,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- The client sends a User-Agent `kwtsms-swift/<version>` (name and version only, no personal data) so kwtSMS can see which integrations are in use. An optional `appName` init argument puts your app's token in front, e.g. `my-shop/2.1.0 kwtsms-swift/0.4.0`. New `KwtSMS.version`, `userAgent` and `KwtSMS.buildUserAgent(appName:)`.
-
-### Changed
-
-- Docs, examples, DocC comments and the ERR006/ERR025 action text now use the placeholder 965XXXXXXXX. Tests read the test number from the `KWTSMS_TEST_NUMBER` environment variable (digits only, 965 plus 8 digits) and are skipped when it is unset.
-
-### Docs
-
-- ERR028 action text: "Sent to the same number too soon." ERR028 is opt-in per account (Duplicate SMS protection) with a per-account window (10 seconds by default), not a fixed 15 seconds.
-- Test mode: test messages are queued but not delivered, and their credits are held until you delete them from the Sending Queue. Earlier text said no credits were consumed.
+- Client identifies itself with its name and version; optional `appName` argument.
 
 ## [0.3.0] - 2026-03-13
 
 ### Added
 
-- Country-specific phone validation with `phoneRules` table (80+ countries): validates local number length and mobile prefix.
-- `findCountryCode()` for longest-match country code detection (3-digit, 2-digit, 1-digit).
-- `validatePhoneFormat()` for country-specific length and prefix checks.
-- Domestic trunk prefix stripping in `normalizePhone()` (e.g. `9660559...` becomes `966559...`).
-- GitGuardian secrets scanning workflow.
-- Dependabot auto-merge workflow (patch/minor updates only).
-- Stale issues/PRs workflow (30-day stale, 7-day close).
-- Production OTP example (`Examples/05-OtpProduction/`): complete send/verify flow with rate limiting, code hashing (SHA-256 + salt), constant-time comparison, resend cooldown, attempt tracking.
-- `OtpStoreProtocol` database adapter interface with `MemoryOtpStore` reference implementation.
-- `DeviceAttestVerifier` protocol and `AppAttestVerifier` for Apple App Attest (iOS bot prevention).
-- `TokenAuthenticator` protocol for JWT/session-based auth (2FA flows).
-- Vapor and Hummingbird framework usage examples.
-- CodeQL security analysis workflow (macOS, weekly + on push/PR).
-- Dependabot configuration for Swift packages and GitHub Actions.
+- Country-specific phone validation.
+- Production OTP example with a storage adapter.
+- App Attest and token authentication helpers.
+- Vapor and Hummingbird examples.
+- CI, dependency and code analysis workflows.
 
 ### Changed
 
-- Dropped Swift 5.9 from test matrix (lacks async URLSession on Linux).
-- Cross-platform URLSession async wrapper for Linux compatibility.
-- CodeQL runs on macOS (Swift extractor requires macOS).
-- `ValidateResult` uses `@unchecked Sendable` for Swift 5.10/6.0 compatibility.
+- Cross-platform improvements for Linux.
 
 ## [0.1.0] - 2026-03-05
 
 ### Added
 
 - Initial release of the kwtSMS Swift client library.
-- `KwtSMS` actor with full API coverage: `send()`, `balance()`, `verify()`, `validate()`, `senderIds()`, `coverage()`, `status()`, `deliveryReport()`.
-- Auto-batching for >200 numbers with 0.5s delay between batches.
-- ERR013 (queue full) automatic retry with exponential backoff (30s, 60s, 120s).
-- Phone number utilities: `normalizePhone()`, `validatePhoneInput()`, `deduplicatePhones()`.
-- Message cleaning: `cleanMessage()` strips emojis, HTML, control chars, converts Arabic digits.
-- All 33 kwtSMS error codes mapped to developer-friendly action messages via `apiErrors` and `enrichError()`.
-- `.env` file loading via `fromEnv()` factory method (macOS/Linux/server).
-- JSONL logging with password masking.
-- Thread-safe via Swift `actor` isolation.
-- Comprehensive test suite: 115+ unit tests, integration test suite with test mode.
-- Zero external dependencies: uses only Foundation and URLSession.
-- Supports iOS 15+, macOS 12+, tvOS 15+, watchOS 8+, Linux (server-side Swift).
+- Full API coverage: send, balance, verify, validate, sender IDs, coverage, status, delivery reports.
+- Auto-batching for large lists and automatic retry when the queue is full.
+- Phone number and message cleaning utilities.
+- All kwtSMS error codes mapped to clear action messages.
+- `.env` loading and JSONL logging.
+- Zero external dependencies; iOS 15+, macOS 12+, tvOS 15+, watchOS 8+ and Linux.
