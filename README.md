@@ -1,3 +1,8 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/readme-header-dark.png">
+  <img alt="kwtSMS for Swift: SMS and OTP through kwtSMS" src=".github/assets/readme-header-light.png">
+</picture>
+
 # kwtsms-swift
 
 [![Swift 5.10+](https://img.shields.io/badge/Swift-5.10+-orange.svg?style=flat-square)](https://swift.org)
